@@ -38,14 +38,37 @@ function getTitle() {
     return trim(title.innerHTML);
 }
 
+function createCalendarLink(title, loc, dates, description) {
+    var link = document.createElement("a");
+
+    var url = 'http://www.google.com/calendar/event';
+    link.href = encodeURI(url + '?ctext=' +
+        title + '&action=TEMPLATE&details=' + description + '&location=' +
+        loc + '&dates=' + dates);
+
+    var img = document.createElement("img");
+    img.src = "http://www.google.com/calendar/images/ext/gc_button1.gif";
+    img.style.border = "0px";
+    link.appendChild(img);
+
+    return link;
+}
+
+
 var title = getTitle();
 var loc = textAfter("Location");
 var schedule = textAfter("Schedule");
 var description = textAfter("Description");
-var panelists = textAfter("Panelists");
+if (!title || !loc || !schedule || !description)
+    return;
 
-console.log(title);
-console.log(loc);
-console.log(schedule);
-console.log(description);
-console.log(panelists);
+description += "\n";
+var panelists = textAfter("Panelists");
+if (panelists.length > 0)
+    description += "\nPanelists: " + panelists;
+
+// TODO(enne): convert to "UTC/UTC" format.
+var dates = "";
+
+var scheduleElement = elementAfter("Schedule");
+scheduleElement.appendChild(createCalendarLink(title, loc, dates, description));
