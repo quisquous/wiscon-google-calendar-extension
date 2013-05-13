@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+
+  "name": "Wiscon37 Helper for Google Calendar",
+  "description": "Adds buttons for adding Wiscon events to your calendar.",
+  "version": "1.0",
+
+  "browser_action": {},
+  "permissions": [
+    "http://wiscon.piglet.org/"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": ["http://wiscon.piglet.org/program/detail*"],
+      "js": ["addtocalendar.js"]
+    }
+  ]
+}
