@@ -231,9 +231,6 @@ function addButton() {
         return;
     }
 
-    if (!title || !loc || !schedule)
-        return;
-
     var description = textAfter("Description");
     if (description) {
         // Google Calendar craps out with 414 errors if the URI is too long.
