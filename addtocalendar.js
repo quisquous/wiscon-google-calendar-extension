@@ -84,8 +84,10 @@ function scheduleToDates(str) {
     // Separated by ndash
 
     var datestrs = str.split("–");  // ndash
-    if (datestrs.length != 2)
+    if (datestrs.length != 2) {
+        console.error("Found " + datestrs.length - 1 + " ndashes, not 2");
         return;
+    }
     var startStr = datestrs[0];
     var endStr = datestrs[1];
 
@@ -106,8 +108,10 @@ function scheduleToDates(str) {
     }
     var startDay = strToDay(startStr);
     var endDay = strToDay(endStr);
-    if (!startDay)
+    if (!startDay) {
+        console.error("Couldn't parse start day");
         return;
+    }
     if (!endDay)
         endDay = startDay;
 
@@ -130,8 +134,10 @@ function scheduleToDates(str) {
     }
     var startOffset = strToOffset(startStr);
     var endOffset = strToOffset(endStr);
-    if (endOffset === undefined)
+    if (endOffset === undefined) {
+        console.error("Couldn't find AM or PM in end time");
         return;
+    }
     if (startOffset === undefined)
         startOffset = endOffset;
 
@@ -142,14 +148,20 @@ function scheduleToDates(str) {
     endStr = stripEverythingButTime(endStr);
 
     var startHM = startStr.split(":");
-    if (startHM.length != 2)
+    if (startHM.length != 2) {
+        console.error("Wrong number of colons in start time, found " +
+                      startHM.length - 1);
         return;
+    }
     var startHour = parseInt(startHM[0]) + startOffset;
     var startMinute = parseInt(startHM[1]);
 
     var endHM = endStr.split(":");
-    if (endHM.length != 2)
+    if (endHM.length != 2) {
+        console.error("Wrong number of colons in end time, found " +
+                      endHM.length - 1);
         return;
+    }
     var endHour = parseInt(endHM[0]) + endOffset;
     var endMinute = parseInt(endHM[1]);
 
@@ -158,8 +170,10 @@ function scheduleToDates(str) {
     var month = 5;
     var startDate = new Date(year, month - 1, startDay, startHour, startMinute);
     var endDate = new Date(year, month - 1, endDay, endHour, endMinute);
-    if (endDate < startDate)
+    if (endDate < startDate) {
+        console.error("Start time after end time");
         return;
+    }
 
     // Since all the times are given in CDT, convert the date's time to UTC
     // manually to avoid having to deal with any local timezones.
@@ -193,21 +207,41 @@ function scheduleToDates(str) {
 
 function addButton() {
     var title = getTitle();
-    var loc = textAfter("Location");
-    var schedule = textAfter("Schedule");
-    var description = textAfter("Description");
-    if (!title || !loc || !schedule || !description)
+    if (!title) {
+        console.error("Missing title");
         return;
-
-    description += "\n";
-    var panelists = textAfter("Panelists");
-    if (panelists.length > 0)
-        description += "\nPanelists: " + panelists;
-    description += "\nURL: " + window.location;
+    }
+    var loc = textAfter("Location");
+    if (!loc) {
+        console.error("Missing location");
+        return;
+    }
+    var schedule = textAfter("Schedule");
+    if (!schedule) {
+        console.error("Missing schedule");
+        return;
+    }
 
     var dates = scheduleToDates(schedule);
-    if (!dates)
+    if (!dates) {
+        console.error("Couldn't parse schedule: " + schedule);
         return;
+    }
+
+    if (!title || !loc || !schedule)
+        return;
+
+    var description = textAfter("Description");
+    if (description) {
+        description += "\n\n";
+    } else {
+        description = "";
+    }
+
+    var panelists = textAfter("Panelists");
+    if (panelists.length > 0)
+        description += "Panelists: " + panelists + "\n";
+    description += "URL: " + window.location;
 
     var link = createCalendarLink(title, loc, dates, description);
     var scheduleElement = elementAfter("Schedule");
