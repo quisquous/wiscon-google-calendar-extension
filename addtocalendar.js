@@ -191,22 +191,27 @@ function scheduleToDates(str) {
     return localDateToString(startDate) + "/" + localDateToString(endDate);
 }
 
-var title = getTitle();
-var loc = textAfter("Location");
-var schedule = textAfter("Schedule");
-var description = textAfter("Description");
-if (!title || !loc || !schedule || !description)
-    return;
+function addButton() {
+    var title = getTitle();
+    var loc = textAfter("Location");
+    var schedule = textAfter("Schedule");
+    var description = textAfter("Description");
+    if (!title || !loc || !schedule || !description)
+        return;
 
-description += "\n";
-var panelists = textAfter("Panelists");
-if (panelists.length > 0)
-    description += "\nPanelists: " + panelists;
-description += "\nURL: " + window.location;
+    description += "\n";
+    var panelists = textAfter("Panelists");
+    if (panelists.length > 0)
+        description += "\nPanelists: " + panelists;
+    description += "\nURL: " + window.location;
 
-var dates = scheduleToDates(schedule);
-if (!dates)
-    return;
+    var dates = scheduleToDates(schedule);
+    if (!dates)
+        return;
 
-var scheduleElement = elementAfter("Schedule");
-scheduleElement.appendChild(createCalendarLink(title, loc, dates, description));
+    var link = createCalendarLink(title, loc, dates, description);
+    var scheduleElement = elementAfter("Schedule");
+    scheduleElement.appendChild(link);
+}
+
+addButton();
