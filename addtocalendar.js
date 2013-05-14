@@ -4,6 +4,21 @@ function trim(str) {
     return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 }
 
+// Strip out any HTML or HTML entities from this element
+// e.g. "<div>Some <b>string</b> &amp; example</div>" => "Some string & example"
+function unescapeElement(node) {
+    var result = "";
+    for (var i = 0; i < node.childNodes.length; ++i) {
+        var child = node.childNodes[i];
+        if (child.childNodes.length == 0) {
+            result += child.nodeValue;
+        } else {
+            result += unescapeElement(child);
+        }
+    }
+    return result;
+}
+
 function elementAfter(text) {
     var ths = document.getElementsByTagName("th")
     for (var i = 0; i < ths.length; ++i) {
@@ -20,22 +35,16 @@ function textAfter(text) {
     var content = elementAfter(text);
     if (!content)
         return "";
-    if (content.children.length == 0) {
-        return trim(content.innerHTML);
-    }
-    var str = "";
-    for (var c = 0; c < content.children.length; ++c) {
-        if (str.length > 0) {
-            str += ", ";
-        }
-        str += trim(content.children[c].innerHTML);
-    }
-    return str;
+    return trim(unescapeElement(content));
 }
 
 function getTitle() {
-    var title = document.getElementsByClassName("appPlainTitle")[0];
-    return trim(title.innerHTML);
+    var titleElements = document.getElementsByClassName("appPlainTitle");
+    if (titleElements.length != 1) {
+        console.error("Wrong number of title elements: " + titleElements.length);
+        return;
+    }
+    return trim(unescapeElement(titleElements[0]));
 }
 
 function createCalendarLink(title, loc, dates, description) {
@@ -49,12 +58,6 @@ function createCalendarLink(title, loc, dates, description) {
         'action': 'TEMPLATE',
     };
 
-    function unescape(str) {
-        var div = document.createElement('div');
-        div.innerHTML = str;
-        return div.firstChild.nodeValue;
-    }
-
     var url = 'http://www.google.com/calendar/event';
     var first = true;
     for (var key in params) {
@@ -64,7 +67,7 @@ function createCalendarLink(title, loc, dates, description) {
         } else {
             url += "&";
         }
-        url += key + "=" + encodeURIComponent(unescape(params[key]));
+        url += key + "=" + encodeURIComponent(params[key]);
     }
     link.href = url;
 
