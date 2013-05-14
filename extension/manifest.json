@@ -13,5 +13,9 @@
       "matches": ["http://wiscon.piglet.org/program/detail*"],
       "js": ["addtocalendar.js"]
     }
-  ]
+  ],
+
+  "icons": {
+    "128": "icon_128.png"
+  }
 }
