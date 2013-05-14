@@ -180,6 +180,7 @@ description += "\n";
 var panelists = textAfter("Panelists");
 if (panelists.length > 0)
     description += "\nPanelists: " + panelists;
+description += "\nURL: " + window.location;
 
 var dates = scheduleToDates(schedule);
 if (!dates)
