@@ -16,7 +16,7 @@ function unescapeElement(node) {
             result += unescapeElement(child);
         }
     }
-    return result;
+    return trim(result);
 }
 
 function elementAfter(text) {
@@ -35,7 +35,7 @@ function textAfter(text) {
     var content = elementAfter(text);
     if (!content)
         return "";
-    return trim(unescapeElement(content));
+    return unescapeElement(content);
 }
 
 function getTitle() {
@@ -44,7 +44,7 @@ function getTitle() {
         console.error("Wrong number of title elements: " + titleElements.length);
         return;
     }
-    return trim(unescapeElement(titleElements[0]));
+    return unescapeElement(titleElements[0]);
 }
 
 function createCalendarLink(title, loc, dates, description) {
