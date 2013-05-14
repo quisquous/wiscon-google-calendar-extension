@@ -61,10 +61,6 @@ function scheduleToDates(str) {
     //   Sun, 8:45 pm-Mon, 3:00 am
     // Separated by ndash
 
-    var year = "2013";
-    var month = "05";
-
-    console.log("Str: " + str);
     var datestrs = str.split("–");  // ndash
     if (datestrs.length != 2)
         return;
@@ -73,11 +69,11 @@ function scheduleToDates(str) {
 
     function strToDay(str) {
         var dayNameToNumber = {
-            "Thu": "23",
-            "Fri": "24",
-            "Sat": "25",
-            "Sun": "26",
-            "Mon": "27",
+            "Thu": 23,
+            "Fri": 24,
+            "Sat": 25,
+            "Sun": 26,
+            "Mon": 27,
         };
 
         for (var dateStr in dayNameToNumber) {
@@ -92,8 +88,6 @@ function scheduleToDates(str) {
         return;
     if (!endDay)
         endDay = startDay;
-    console.log("start day: " + startDay);
-    console.log("end day: " + endDay);
 
     function stripOffDay(str) {
         var idx = str.indexOf(", ");
@@ -118,36 +112,37 @@ function scheduleToDates(str) {
         return;
     if (startOffset === undefined)
         startOffset = endOffset;
-    console.log("start Offset: " + startOffset);
-    console.log("end Offset: " + endOffset);
 
     function stripEverythingButTime(str) {
         return str.replace(/[^0-9:]/g, "");
     }
     startStr = stripEverythingButTime(startStr);
     endStr = stripEverythingButTime(endStr);
-    console.log("start Str: " + startStr);
-    console.log("end Str: " + endStr);
 
     var startHM = startStr.split(":");
     if (startHM.length != 2)
         return;
-    startHM[0] += startOffset;
+    var startHour = parseInt(startHM[0]) + startOffset;
+    var startMinute = parseInt(startHM[1]);
 
     var endHM = endStr.split(":");
     if (endHM.length != 2)
         return;
-    endHM[0] += endOffset;
+    var endHour = parseInt(endHM[0]) + endOffset;
+    var endMinute = parseInt(endHM[1]);
 
-    var startDate = new Date(year, month, startDay, startHM[0], startHM[1]);
-    var endDate = new Date(year, month, endDay, endHM[0], endHM[1]);
+    // Hilariously, month is zero-based.  Go home JavaScript, you're drunk.
+    var year = 2013;
+    var month = 5;
+    var startDate = new Date(year, month - 1, startDay, startHour, startMinute);
+    var endDate = new Date(year, month - 1, endDay, endHour, endMinute);
     if (endDate < startDate)
         return;
 
+    // Since all the times are given in CDT, convert the date's time to UTC
+    // manually to avoid having to deal with any local timezones.
     function adjustToUTCFromCDT(date) {
-        var seconds = date.getTime();
-        var offset = 5 * 60 * 60;
-        date.setTime(seconds + offset);
+        date.setHours(date.getHours() + 5);
     }
     adjustToUTCFromCDT(startDate);
     adjustToUTCFromCDT(endDate);
@@ -160,7 +155,7 @@ function scheduleToDates(str) {
             return str;
         }
 
-        // YYYYMMDDTHHMMSSZ
+        // YYYY MM DD "T" HH MM SS "Z"
         var str = "" + date.getFullYear();
         str += padWithZero(date.getMonth() + 1);
         str += padWithZero(date.getDate());
