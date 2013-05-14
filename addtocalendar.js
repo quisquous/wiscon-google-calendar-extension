@@ -236,6 +236,13 @@ function addButton() {
 
     var description = textAfter("Description");
     if (description) {
+        // Google Calendar craps out with 414 errors if the URI is too long.
+        // For sanity's sake, cap the description length to something reasonable.
+        var max_length = 1000;
+        if (description.length > max_length) {
+            description = description.substring(0, max_length);
+            description += "\n(cut for length)";
+        }
         description += "\n\n";
     } else {
         description = "";
