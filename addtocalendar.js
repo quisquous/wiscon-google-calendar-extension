@@ -41,10 +41,32 @@ function getTitle() {
 function createCalendarLink(title, loc, dates, description) {
     var link = document.createElement("a");
 
+    var params = {
+        'ctext': title,
+        'details': description,
+        'location': loc,
+        'dates': dates,
+        'action': 'TEMPLATE',
+    };
+
+    function unescape(str) {
+        var div = document.createElement('div');
+        div.innerHTML = str;
+        return div.firstChild.nodeValue;
+    }
+
     var url = 'http://www.google.com/calendar/event';
-    link.href = encodeURI(url + '?ctext=' +
-        title + '&action=TEMPLATE&details=' + description + '&location=' +
-        loc + '&dates=' + dates);
+    var first = true;
+    for (var key in params) {
+        if (first) {
+            url += "?";
+            first = false;
+        } else {
+            url += "&";
+        }
+        url += key + "=" + encodeURIComponent(unescape(params[key]));
+    }
+    link.href = url;
 
     var img = document.createElement("img");
     img.src = "http://www.google.com/calendar/images/ext/gc_button1.gif";
