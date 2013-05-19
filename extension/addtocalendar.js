@@ -150,29 +150,32 @@ function scheduleToDates(str) {
     startStr = stripEverythingButTime(startStr);
     endStr = stripEverythingButTime(endStr);
 
-    var startHM = startStr.split(":");
-    if (startHM.length != 2) {
-        console.error("Wrong number of colons in start time, found " +
-                      startHM.length - 1);
-        return;
+    function toHourMinute(timeStr, offset) {
+        var hm = timeStr.split(":");
+        if (hm.length != 2) {
+            console.error("Wrong number of colons in time, found " +
+                          hm.length - 1);
+            return;
+        }
+        var hour = parseInt(hm[0]) + offset;
+        if (hour == 12 && offset == 0)
+            hour = 0;
+        var minute = parseInt(hm[1]);
+        return [hour, minute]
     }
-    var startHour = parseInt(startHM[0]) + startOffset;
-    var startMinute = parseInt(startHM[1]);
 
-    var endHM = endStr.split(":");
-    if (endHM.length != 2) {
-        console.error("Wrong number of colons in end time, found " +
-                      endHM.length - 1);
+    var startHM = toHourMinute(startStr, startOffset);
+    if (startHM === undefined)
         return;
-    }
-    var endHour = parseInt(endHM[0]) + endOffset;
-    var endMinute = parseInt(endHM[1]);
+    var endHM = toHourMinute(endStr, endOffset);
+    if (endHM === undefined)
+        return;
 
     // Hilariously, month is zero-based.  Go home JavaScript, you're drunk.
     var year = 2013;
     var month = 5;
-    var startDate = new Date(year, month - 1, startDay, startHour, startMinute);
-    var endDate = new Date(year, month - 1, endDay, endHour, endMinute);
+    var startDate = new Date(year, month - 1, startDay, startHM[0], startHM[1]);
+    var endDate = new Date(year, month - 1, endDay, endHM[0], endHM[1]);
     if (endDate < startDate) {
         console.error("Start time after end time");
         return;
