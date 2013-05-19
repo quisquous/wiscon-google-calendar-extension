@@ -3,7 +3,7 @@
 
   "name": "WisCon37 helper for Google Calendar™",
   "description": "Adds buttons for adding WisCon37 events to your calendar.",
-  "version": "0.1",
+  "version": "0.2",
 
   "browser_action": {},
   "permissions": [],
