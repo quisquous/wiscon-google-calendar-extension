@@ -3,10 +3,7 @@
 
   "name": "WisCon program helper for Google Calendar™",
   "description": "Adds buttons for adding WisCon events to your calendar.",
-  "version": "0.3",
-
-  "browser_action": {},
-  "permissions": [],
+  "version": "0.4",
 
   "content_scripts": [
     {
