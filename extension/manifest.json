@@ -9,6 +9,10 @@
     {
       "matches": ["http://wiscon.piglet.org/program/detail*"],
       "js": ["addtocalendar.js"]
+    },
+    {
+      "matches": ["http://wiscon.info/program/detail*"],
+      "js": ["addtocalendar.js"]
     }
   ],
 

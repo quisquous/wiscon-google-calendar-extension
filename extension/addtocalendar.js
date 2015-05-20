@@ -108,13 +108,14 @@ function scheduleToDates(str) {
     var startStr = datestrs[0];
     var endStr = datestrs[1];
 
+    // TODO(enne): Figure out how to do this automatically.
     function strToDay(str) {
         var dayNameToNumber = {
-            "Thu": 23,
-            "Fri": 24,
-            "Sat": 25,
-            "Sun": 26,
-            "Mon": 27,
+            "Thu": 21,
+            "Fri": 22,
+            "Sat": 23,
+            "Sun": 24,
+            "Mon": 25,
         };
 
         for (var dateStr in dayNameToNumber) {
@@ -185,8 +186,10 @@ function scheduleToDates(str) {
     if (endHM === undefined)
         return;
 
+    // No way to figure out the year from the page, so use the current year.
+    var year = new Date().getFullYear();
+
     // Hilariously, month is zero-based.  Go home JavaScript, you're drunk.
-    var year = 2013;
     var month = 5;
     var startDate = new Date(year, month - 1, startDay, startHM[0], startHM[1]);
     var endDate = new Date(year, month - 1, endDay, endHM[0], endHM[1]);
