@@ -108,14 +108,14 @@ function scheduleToDates(str) {
     var startStr = datestrs[0];
     var endStr = datestrs[1];
 
-    // TODO(enne): Figure out how to do this automatically.
+    // TODO(enne): Figure out how to do this automatically.  *<_<*
     function strToDay(str) {
         var dayNameToNumber = {
-            "Thu": 26,
-            "Fri": 27,
-            "Sat": 28,
-            "Sun": 29,
-            "Mon": 30,
+            "Thu": 25,
+            "Fri": 26,
+            "Sat": 27,
+            "Sun": 28,
+            "Mon": 29,
         };
 
         for (var dateStr in dayNameToNumber) {
