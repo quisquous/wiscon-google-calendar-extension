@@ -65,7 +65,7 @@ function createCalendarLink(title, loc, dates, description) {
     var link = document.createElement("a");
 
     var params = {
-        'ctext': title,
+        'text': title,
         'details': description,
         'location': loc,
         'dates': dates,
