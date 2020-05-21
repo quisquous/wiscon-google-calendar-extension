@@ -108,14 +108,18 @@ function scheduleToDates(str) {
     var startStr = datestrs[0];
     var endStr = datestrs[1];
 
-    // TODO(enne): Figure out how to do this automatically.  *<_<*
+    // No way to figure out the year from the page, so use the current year.
+    let year = new Date().getFullYear();
+    let lastDayOfMay = new Date(year, 5, 0);
+    // Find the previous Monday.
+    let monday = lastDayOfMay.getDate() - (lastDayOfMay.getDay() + 7 - 1) % 7;
     function strToDay(str) {
         var dayNameToNumber = {
-            "Thu": 23,
-            "Fri": 24,
-            "Sat": 25,
-            "Sun": 26,
-            "Mon": 27,
+            "Thu": monday - 4,
+            "Fri": monday - 3,
+            "Sat": monday - 2,
+            "Sun": monday - 1,
+            "Mon": monday,
         };
 
         for (var dateStr in dayNameToNumber) {
@@ -185,9 +189,6 @@ function scheduleToDates(str) {
     var endHM = toHourMinute(endStr, endOffset);
     if (endHM === undefined)
         return;
-
-    // No way to figure out the year from the page, so use the current year.
-    var year = new Date().getFullYear();
 
     // Hilariously, month is zero-based.  Go home JavaScript, you're drunk.
     var month = 5;
