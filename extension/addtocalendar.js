@@ -86,7 +86,7 @@ function createCalendarLink(title, loc, dates, description) {
     link.href = url;
 
     var img = document.createElement("img");
-    img.src = "http://www.google.com/calendar/images/ext/gc_button1.gif";
+    img.src = "https://www.google.com/calendar/images/ext/gc_button1.gif";
     img.style.border = "0px";
     link.appendChild(img);
 
